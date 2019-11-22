@@ -1,0 +1,37 @@
+library(arsenal)
+
+table_one <- tableby(continent ~ ., data = gapminder)
+summary(table_one, title = "Gapminder Data")
+
+##Kkwt é kusrkall wallis e chisq = qui-cuadrado
+my_controls <- tableby.control(
+  test = T,
+  total = T,
+  numeric.test = "kwt", cat.test = "chisq",
+  numeric.stats = c("meansd", "medianq1q3", "range", "Nmiss2"),
+  cat.stats = c("countpct", "Nmiss2"),
+  stats.labels = list(
+    meansd = "Mean (SD)",
+    medianq1q3 = "Median (Q1, Q3)",
+    range = "Min - Max",
+    Nmiss2 = "Missing"
+  )
+)
+## Renomeia as colunas##
+my_labels <- list(
+  lifeExp = "Life Expectancy",
+  pop = "Population (million)",
+  gdpPercap = "GDP per capita",
+  year = "Year"
+)
+ 
+##nova tabela com os controles 
+table_two <- tableby(continent ~ .,
+  data = gapminder,
+  control = my_controls
+)
+ 
+summary(table_two,
+  labelTranslations = my_labels,
+  title = "Summary Statistic of Data"
+)
