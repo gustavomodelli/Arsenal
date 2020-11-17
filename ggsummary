@@ -1,0 +1,36 @@
+library(tidyverse)
+library(gtsummary)
+
+data("trial")
+trial %>% str()
+
+
+trial %>% 
+  tbl_summary(by = trt) %>% 
+  add_p() %>% 
+  add_overall() 
+
+##with mean and sd
+trial %>% 
+  tbl_summary(by = trt,
+              type = all_continuous() ~ "continuous2",
+              statistic = all_continuous() ~ c("{N_nonmiss}",
+                                               "{mean} ({sd})", 
+                                               "{median} ({p25}, {p75})", 
+                                               "{min}, {max}"),
+              missing = "no") %>% 
+  add_p() %>% 
+  add_overall() 
+
+
+
+model1 <- glm(death ~ trt + age + marker , data = trial, family = 'binomial')
+summary(model1)
+
+model1 %>% 
+  tbl_regression(exponentiate = TRUE)
+
+##Test distribution continuous variables
+trial %>% 
+  select_if(is.numeric) %>% 
+  map(shapiro.test)
