@@ -1,0 +1,37 @@
+library(tidyverse)
+library(gtsummary)
+
+
+data("trial")
+trial %>% str()
+
+
+trial %>% 
+  tbl_summary(by = trt) %>% 
+  add_p() %>%
+  add_overall() %>% 
+  bold_labels()
+
+
+##with mean and Sd
+trial %>% 
+  tbl_summary(by = trt,
+              statistic = list(all_continuous() ~ "{mean} ({sd})",
+                               all_categorical() ~ "{n}  ({p}%)")) %>% 
+  add_p() %>%
+  add_overall() %>% 
+  bold_labels()
+
+##with multiple lines by categories
+trial %>% 
+  tbl_summary(by = trt,
+              type = all_continuous() ~ "continuous2",
+              statistic = all_continuous() ~ c("{N_nonmiss}",
+                                               "{median} ({p25}, {p75})", 
+                                               "{min}, {max}")) %>% 
+  add_p() %>%
+  add_overall() %>% 
+  bold_labels()
+  
+##themes
+theme_gtsummary_journal(journal = "jama")
